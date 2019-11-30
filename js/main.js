@@ -4,7 +4,6 @@ $(document).ready(function() {
     if(!ageVerified){
         ageVerified = false;
         sessionStorage.setItem("ageVerified", JSON.stringify(ageVerified));
-        document.getElementById("buttonClose").disabled=true;
         $('#staticBackdrop').modal('show');
     }
 });
@@ -14,30 +13,41 @@ $(window).on('load',function(){
     filYearCombo();
 });
 
-
 //Change sessionStorage:ageVerified to true // sessionStorage wil be cleared after browser restarts
 $(document).on("click", "#buttonAgeCheck", function(){
+    let buttonContinue = document.getElementById("buttonContinue");
     // opbouwen opgegeven leeftijd
     let enterdAge = getAge(document.getElementById("ageYear").value +"/" + document.getElementById("ageMonth").value +"/" + document.getElementById("ageDay").value);
     let minimumAge = 18;
 
     if(enterdAge<minimumAge) {
-        document.getElementById("buttonClose").innerText="Sorry to young";
+        buttonContinue.innerText="Sorry to young";
     } else {
         ageVerified = true;
         sessionStorage.setItem("ageVerified", JSON.stringify(ageVerified));
-        document.getElementById("buttonClose").disabled=false;
-        document.getElementById("buttonClose").innerText="Welkom";
+        buttonContinue.innerText="Welkom";
     }
 });
 
 $(document).on("click", "#buttonModal", function(){
+    let buttonContinue = document.getElementById("buttonContinue");
     ageVerified = false;
     sessionStorage.setItem("ageVerified", JSON.stringify(ageVerified));
-    document.getElementById("buttonClose").disabled=true;
+    buttonContinue.innerText="Leave";
     $('#staticBackdrop').modal('show');
+    $("#ageDay").val('01');
+    $("#ageMonth").val('01');
+    $("#ageYear").val(currentYear());
 });
 
+$(document).on("click", "#buttonContinue", function(){
+    let ageVerified = JSON.parse(sessionStorage.getItem("ageVerified"));
+    if(!ageVerified){
+        window.location.replace("http://www.google.com");
+    } else {
+        $('#staticBackdrop').modal('hide');
+    }
+});
 
 //Function for calculating age
 function getAge(dateString) {
@@ -54,6 +64,7 @@ function getAge(dateString) {
 
 //Function for filling dropdown elements
 function filDayCombo(){
+    $('#ageDay').empty()
     for (let i = 1; i < 32; i++) {
         let val=i;
         if(i<10){
@@ -67,9 +78,14 @@ function filDayCombo(){
     }
 }
 
-function filYearCombo(){
+function currentYear() {
     let vandaag = new Date()
-    let baseYear = vandaag.getFullYear();
+    return vandaag.getFullYear();
+}
+
+function filYearCombo(){
+    $('#ageYear').empty()
+    let baseYear =currentYear();
     for(i=baseYear; baseYear-100 < i; i--) {
         textnode2=document.getElementById("ageYear");
         let op = new Option();
