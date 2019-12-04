@@ -16,7 +16,6 @@ $(window).on('load',function(){
 // Change sessionStorage:ageVerified to true // sessionStorage wil be cleared after browser restarts
 $(document).on("click", "#buttonAgeCheck", function(){
     let buttonContinue = document.getElementById("buttonContinue");
-    // Build age variable
     let enterdAge = getAge(document.getElementById("ageYear").value +"/" + document.getElementById("ageMonth").value +"/" + document.getElementById("ageDay").value);
     let minimumAge = 18;
     if(enterdAge<minimumAge) {
